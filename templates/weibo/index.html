@@ -1,0 +1,132 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+<div class="container min-height">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="https://www.guiaihai.com/">首页</a></li>
+        <li class="breadcrumb-item active"><a href="https://www.guiaihai.com/weibo.html">树洞</a></li>
+      </ol>
+    </nav>
+
+  <div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+          <!-- Then put toasts within -->
+          <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000" style="z-index: 100000;position: fixed;margin:auto;left:0;right: 0;margin-top: 2rem;">
+            <div class="toast-header">
+              <strong class="me-auto">爱嗨网提示您！</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              
+            </div>
+            </div>
+                <form method="POST" id="form_weibo" enctype="multipart/form-data" novalidate="novalidate">
+                    {% csrf_token %}
+                    <textarea class="form-control" rows="2" id="content" name="content"></textarea>
+                    <div style="padding:5px 0;">
+                        <div class="fr">
+                            <button class="btn btn-sm btn-info ts-publish" type="button">树洞一下</button>
+                        </div>
+                    </div>
+                </form>
+                <ul class="ts-weibo-show">
+                    {% for item in list %}
+                    <a class="mbtl" href="https://www.guiaihai.com/user/3.html">
+                        <img class="rounded-circle" alt="{{ item.username }}" title="{{ item.username }}" src="{{ item.photo }}">
+                    </a>
+                    <li class="mbtr">
+                        <div class="author">
+                            <a class="ms-2" href="https://www.guiaihai.com/user/3.html" alt="{{ item.username }}" title="{{ item.username }}">{{ item.username }}</a>
+                            <span class="fs12 c9">{{ item.addtime }}</span>
+                        </div>
+                        <div class="content ms-2">
+                            <a href="{% url 'weibo_detail' weibo_id=item.weibo_id %}">{{ item.content|safe }}</a>
+                        </div>
+                        <p class="text-end">
+                            <a href="{% url 'weibo_detail' weibo_id=item.weibo_id %}">({{ item.count_comment }})回复</a>
+                        </p>
+                    </li>  
+                    {% endfor %}
+                </ul>
+                {{ page|safe }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">热门树洞</div>
+            <div class="card-body">
+                <ul class="ts-weibo-list">
+                    {% for item in hotweibos %}
+                    <li>
+                        <span class="portrait">
+                            <a href="https://www.guiaihai.com/user/3.html"><img align="absmiddle" class="SmallPortrait rounded-circle" title="{{ item.username }}" alt="{{ item.username }}" src="{{ item.photo }}">
+                            </a>
+                        </span>
+                        <div class="body">
+                            <span class="user"><a href="https://www.guiaihai.com/user/3.html">{{ item.username }}</a>：</span>
+                            <span class="log"><a href="{% url 'weibo_detail' weibo_id=item.weibo_id %}">{{ item.content|safe }}</a></span>
+                            <span class="time">2022-06-04 18:01 (<a href="{% url 'weibo_detail' weibo_id=item.weibo_id %}">{{ item.count_comment }} 评</a>)</span>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}
+<script type="text/javascript">
+$(".ts-publish").click(function (){
+    var content = $.trim($("textarea[name='content']").val());
+    if(!content)
+    {
+        $(".toast-body").removeClass("text-success").addClass("text-danger").html("内容不允许为空");
+
+        var toast = new bootstrap.Toast(document.querySelector('.toast'));
+        toast.show();
+        // 设置一个定时器，在5秒后自动隐藏提示框
+        setTimeout(function() {
+        toast.hide();
+        }, 5000); // 5000毫秒（5秒）
+        return false;
+    }
+    var formData = new FormData($('#form_weibo')[0]);
+    $.ajax({
+        url: "{% url 'weibo_createdo' %}",
+        type: 'POST',
+        success: function (rs){
+            if(rs.code == 100)
+            {
+                $(".toast-body").removeClass("text-success").addClass("text-danger").html(rs.msg);
+                new bootstrap.Toast(document.querySelector('.toast')).show();
+                document.querySelector('.toast').addEventListener('hidden.bs.toast', function () {
+                  location.href = "{% url 'login' %}"
+                })
+            }else if(rs.code == 0)
+            {
+                $(".toast-body").removeClass("text-danger").addClass("text-success").html(rs.msg);
+                new bootstrap.Toast(document.querySelector('.toast')).show();
+                document.querySelector('.toast').addEventListener('hidden.bs.toast', function () {
+                  location.reload()
+                })
+            }else{
+                $(".toast-body").removeClass("text-success").addClass("text-danger").html(rs.msg);
+                new bootstrap.Toast(document.querySelector('.toast')).show();
+            }
+        },
+        // Form数据
+        data: formData,
+        cache: false,
+        dataType: 'json',
+        contentType: false,
+        processData: false
+    });
+
+})
+</script>

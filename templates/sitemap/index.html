@@ -1,0 +1,22 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+<div class="container ts-other-map">
+    {% for type,v in newCategorys.items %}
+    <h2>{{ v.name}}分类</h2>
+
+    {% for pcid,val in v.data.items %}
+    <div class="title">
+        <h3 class="nav-title"><a href="{% url 'list' route_name=val.route_name %}" title="{{ val.title }}">{{ val.title }}</a></h3>
+    </div>
+    {% if val.child != '' %}
+    <div class="row nav-list" style="padding:5px;">
+        {% for child in val.child %}
+        <div class="col-4 col-md-2 mb-3"><a href="{% url 'list' route_name=child.route_name %}" title="{{ child.title }}">{{ child.title }}</a></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}

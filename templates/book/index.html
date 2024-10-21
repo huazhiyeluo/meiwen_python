@@ -1,0 +1,88 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+<div class="container min-height">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% for item in breadcrumbs %}
+            <li class="breadcrumb-item {{ item.cl }}" aria-current="page"><a href="{{ item.url }}">{{ item.title }}</a></li>  
+            {% endfor %}
+        </ol>
+    </nav>
+    <div class="mt-2">
+        {% for key,item in relationCategorys.items %}
+        <a class="btn btn-sm text-secondary  {% if route_name == item.route_name %}btn-outline-secondary{% endif %}" href="{% url 'list' route_name=item.route_name %}" title="{{item.title}}">{{item.title}}</a>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="page-article-list">
+                        <li class="row">
+                            {% for item in list %}
+                            <div class="col-md-6">
+                                <div class="rec-book-list">
+                                    <div class="avatar"><a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}"><img class="rounded" src="{{item.cover}}" alt="{{item.title}}" title="{{item.title}}"></a></div>
+                                    <div class="content">
+                                        <h3 class="title"><a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}">{{item.title}}</a></h3>
+                                        <div class="info"><a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}">{{item.desc}}</a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </li>
+                    </ul>
+                    {{ page|safe}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card ts-nav-list">
+                <div class="card-header pic-color pic-color-rec">
+                    热门导航
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key,category in hotCategorys.items %}
+                        <div class="col-md-4 col-4">
+                            <a href="{% url 'list' route_name=category.route_name %}">{{ category.title }}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pic-color pic-color-hot">
+                    热门图书
+                </div>
+                <div class="card-body">
+                    <div class="chapter-list-sidebar">
+                        {% for item in hotBooks %}
+                        <div>
+                            <a class="avatar" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}"><img src="{{item.cover}}" alt="{{item.title}}" title="{{item.title}}" /></a>
+                            <a class="title" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}">{{item.title}}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pic-color pic-color-new">
+                    最新图书
+                </div>
+                <div class="card-body">
+                    <div class="chapter-list-sidebar">
+                        {% for item in newBooks %}
+                        <div>
+                            <a class="avatar" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}"><img src="{{item.cover}}" alt="{{item.title}}" title="{{item.title}}" /></a>
+                            <a class="title" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}">{{item.title}}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}

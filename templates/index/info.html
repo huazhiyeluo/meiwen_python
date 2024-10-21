@@ -1,0 +1,25 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+<div class="container min-height">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'about' %}" class="list-group-item  {% if tag == 'about' %} list-group-item-dark {% endif %}?>">关于我们</a>
+                <a href="{% url 'contact' %}" class="list-group-item {% if tag == 'contact' %} list-group-item-dark {% endif %}">联系我们</a>
+                <a href="{% url 'terms' %}" class="list-group-item {% if tag == 'terms' %} list-group-item-dark {% endif %}">用户条款</a>
+                <a href="{% url 'publish' %}" class="list-group-item {% if tag == 'publish' %} list-group-item-dark {% endif %}">投稿指南</a>
+                <a href="{% url 'disclaimer' %}" class="list-group-item {% if tag == 'disclaimer' %} list-group-item-dark {% endif %}">免责申明</a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% with template_name="index/info/"|add:tag|add:".html" %}
+                {% include template_name %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}
+
+
+

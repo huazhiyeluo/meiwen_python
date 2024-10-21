@@ -1,0 +1,145 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+{% load static %}
+<div class="container min-height">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- 轮播 -->
+            <div id="demo" class="carousel slide card" data-bs-ride="carousel">
+                <!-- 指示符 -->
+                <div class="carousel-indicators">
+                    {% for article in coverArticles %}
+                    <button type="button" data-bs-target="#demo" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}"></button>
+                    {% endfor %}
+                </div>
+                <!-- 轮播图片 -->
+                <div class="carousel-inner">
+                    {% for item in coverArticles %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}">
+                            <img decoding="async" src="{{ item.cover }}" class="d-block" style="width:100%;max-height:360px;" />
+                            <div class="carousel-caption"><h3>{{ item.title }}</h3></div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- 左右切换按钮 -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header pic-color pic-color-new">
+                    推荐图书
+                    <small class="float-end"><a class="text-black-50" href="{% url 'book' %}">更多</a></small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for item in recBooks %}
+                        <div class="col-md-6">
+                            <div class="rec-book-list">
+                                <div class="avatar"><a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}"><img class="rounded" src="{{ item.cover }}" alt="{{ item.title }}" title="{{ item.title }}"></a></div>
+                                <div class="content">
+                                    <h3 class="title"><a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}">{{ item.title }}</a>
+                                    </h3>
+                                    <div class="info"><a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.book_id %}">{{ item.desc }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% for cid,v in list.items %}
+            <div class="card">
+                <div class="card-header pic-color {% if forloop.counter0|divisibleby:2 %}pic-color-new{% else %}pic-color-hot{% endif %}">{{ v.category.title }} <small class="float-end"><a class="text-black-50" href="{% url 'list' route_name=v.category.route_name %}">更多</a></small></div>
+                <div class="card-body">
+                    <ul class="row wenzhang-list">
+                        {% for val in v.articles %}
+                        <li class="col-md-6">
+                            <a href="{% url 'detail' route_name=val.route_info.route_name third_id=val.article_id %}">{{ val.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+            {% endfor %}
+            <div class="card ts-nav-list">
+                <div class="card-header pic-color pic-color-rec">
+                    推荐栏目
+                    <small class="float-end"><a class="text-black-50" href="https://www.guiaihai.com/sitemap.html">更多</a></small>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for key,category in recCategorys.items %}
+                        <div class="col-sm-2 col-md-2 col-4">
+                            <a href="{% url 'list' route_name=category.route_name %}">{{ category.title }}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header pic-color pic-color-rec">
+                    热门导航
+                </div>
+                <div class="card-body ts-nav-list">
+                    <div class="row">
+                        {% for key,category in hotCategorys.items %}
+                        <div class="col-md-4 col-4">
+                            <a class="text-black-50" href="{% url 'list' route_name=category.route_name %}">{{ category.title }}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% for type,articles in hotArticles.items %}
+            <div class="card">
+                <div class="card-header pic-color pic-color-hot">热门{{ articles.name }} </div>
+                <div class="card-body">
+                    <ul class="wenzhang-list">
+                        {% for article in articles.list %}
+                        <li>
+                            <a href="{% url 'detail' route_name=article.route_info.route_name third_id=article.article_id %}">{{ article.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+            {% for type,articles in newArticles.items %}
+            <div class="card">
+                <div class="card-header pic-color pic-color-new">最新{{ articles.name }} </div>
+                <div class="card-body">
+                    <ul class="wenzhang-list">
+                        {% for article in articles.list %}
+                        <li>
+                            <a href="{% url 'detail' route_name=article.route_info.route_name third_id=article.article_id %}">{{ article.title }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header pic-color pic-color-new">友情链接<small class="float-end">广告|友链|泛目录|网站|爬虫 <a target="_blank" rel="nofollow" href="http://wpa.qq.com/msgrd?v=3&uin=370838500&site=qq&menu=yes"><img border="0" src="{% static 'image/qq.png' %}" alt="{{ baseConfig.sitename }}网" title="{{ baseConfig.sitename }}网" /></a></small></div>
+        <div class="card-body">
+            <a class="fs13 mr-3" target="_blank" href="{% url 'sitemap' %}">站点地图</a>
+            {% for item in friendchain %}
+            <a class="fs13 mr-3" target="_blank" href="{{ item.url }}" alt="{{ item.keywords }}">{{ item.sitename }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}

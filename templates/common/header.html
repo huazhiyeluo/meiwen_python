@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark header">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% for key,category in topNavCategorys.items %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'list' route_name=category.route_name %}">{{ category.title }}</a></li>
+                {% endfor %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'sitemap' %}">站点地图</a></li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2 btn-sm" type="search" placeholder="搜索：{{ searchTitle }}" id="searchContent">
+                <button class="btn btn-outline-secondary btn-sm mr-2" type="button" onclick="search()"><i class="fa fa-search fa-fw"></i></button>
+            </form>
+        </div>      
+    </div>
+</nav>
+<div class="container-fluid ts-nav">
+    <div class="container">
+        <a {% if controller == 'index' %}class="on"{% endif %} href="{% url 'index' %}" title="{{ baseConfig.sitename }}">首页</a>
+        {% for item in showType %}
+        <a {% if controller == item.flag %}class="on"{% endif %} href="{% url item.flag %}" title="{{item.title }}">{{item.title }}</a>
+        {% endfor %}
+        <a {% if controller == 'weibo' %}class="on"{% endif %} href="{% url 'weibo' %}" title="树洞">树洞</a>
+    </div>
+</div>

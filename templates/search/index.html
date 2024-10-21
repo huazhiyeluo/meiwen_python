@@ -1,0 +1,80 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+<div class="container min-height">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                    <div class="ts-other-menu">
+                        <a {% if tag == "" %}class="s_select"{% endif %} href="{% url 'search' %}">全部</a>
+                        {% for item in showType %}
+                        | <a {% if tag == item.flag %}class="s_select"{% endif %} href="{% url 'search_tag' tag=item.flag %}" title="{{item.title }}">{{item.title }}</a>
+                        {% endfor %}
+                    </div>
+                    <div class="clearfix">
+                        <form method="POST" action="{{ url }}">
+                            {% csrf_token %}
+                            <div class="input-group w-auto">
+                                <input class="form-control" name="keyword" value=""  placeholder="请输入关键字">
+                                <div class="input-group-append"><button class="btn btn-outline-info" type="submit"><i class="fa fa-search"></i>搜索</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+
+                </div>
+                <div class="col-md-10">
+                    <div class="ts-other-top">获得约 <span>{{ total }}</span> 条结果</div>
+                    <hr />
+                    {% for item in list %}
+                    {% if item.oid == 2 or item.oid == 3 or item.oid == 4 %}
+                    <div class="ts-other-result">
+                        <div class="content">
+                            <div>
+                                <span class="c9">[{{ item.catename }}]</span>&nbsp;<a href="{% url 'list' route_name=item.route_info.route_name  %}">{{ item.route_info.title }}</a> | <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.id %}">{{ item.title }}</a>
+                            </div>
+                            <div class="info">发表于 {{ item.addtime }} &nbsp;<a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.id %}">{{ item.num }} 阅读</a></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if item.oid == 1 %}
+                    <div class="ts-other-result">
+                        <div class="content">
+                            <div>
+                                <span class="c9">[{{ item.catename }}]</span>&nbsp;<a href="{% url 'list' route_name=item.route_info.route_name  %}">{{ item.route_info.title }}</a> | <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.id %}">{{ item.title }}</a>
+                            </div>
+                            <div class="info">发表于 {{ item.addtime }} &nbsp;<a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.id %}">{{ item.num }} 阅读</a></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if item.oid == 5 %}
+                    <div class="ts-other-result">
+                        <div class="content">
+                            <div>
+                                <span class="c9">[{{ item.catename }}]</span> &nbsp;<a href="{% url 'list' route_name=item.route_info.route_name  %}">{{ item.route_info.title }}</a> | <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.b_id %}">{{ item.book_title }}</a> | <a href="{% url 'detail_list' route_name=item.route_info.route_name third_id=item.b_id page=item.id %}">{{ item.title }}</a>
+                            </div>
+                            <div class="info">更新于 {{ item.addtime }} &nbsp;<a href="{% url 'detail_list' route_name=item.route_info.route_name third_id=item.b_id page=item.id %}">{{ item.num }} 阅读</a></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="mt-3">
+                        {{ page|safe}}
+                    </div>
+                </div>
+                <div class="col-md-1">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}

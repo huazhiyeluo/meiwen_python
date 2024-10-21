@@ -1,0 +1,124 @@
+{% include "common/header-css.html" %}
+{% include "common/header.html" %}
+<div class="container min-height">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {% for item in breadcrumbs %}
+        <li class="breadcrumb-item {{ item.cl }}" aria-current="page"><a href="{{ item.url }}">{{ item.title }}</a></li>  
+        {% endfor %}
+      </ol>
+    </nav>
+    <div class="mt-2">
+        {% for key,item in relationCategorys.items %}
+        <a class="btn btn-sm text-secondary  {% if route_name == item.route_name %}btn-outline-secondary{% endif %}" href="{% url 'list' route_name=item.route_name %}" title="{{item.title}}">{{item.title}}</a>
+        {% endfor %}
+    </div>
+
+  <div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <ul class="page-article-list">
+                    {% for item in list %}
+                    {% if item.cover != '' %}
+                    <li class="row">
+                        <div class="col-md-4">
+                            <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}"><img class="ts-mw-100" src="{{ item.cover }}" alt="{{ item.title }}" title="{{ item.title }}"></a>
+                        </div>
+                        <div class="col-md-8">
+                            <h2 class="h5">
+                                <a class="title" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}">{{ item.title }}</a>
+                            </h2>
+                            <div class="fs12 text-black-50">
+                                <a class="text-black-50 username" href="https://www.guiaihai.com/user/10067.html" alt="{{ item.username }}" title="{{ item.username }}">{{ item.username }}</a> {{ item.addtime }}    
+                            </div>
+                            <div class="text-black-50 gaiyao mt-2">
+                                {{ item.desc }}<a class="show-all" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}" alt="{{ item.title }}" title="{{ item.title }}">[查看全文]</a>
+                            </div>
+                            <div class="text-muted mt-2 fs12">
+                                <div class="float-start">分类：
+                                    <a class="cate" href="{% url 'list' route_name=item.route_info.route_name  %}" alt="{{ item.route_info.title }}" title="{{ item.route_info.title }}">{{ item.route_info.title }}</a>
+                                </div>
+                                <div class="float-end">
+                                    <i class="fa fa-eye"></i>6<i class="fa fa-comment ms-2"></i>0                            
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li>
+                    {% else %}
+                    <li>
+                        <h2 class="h5">
+                            <a class="title" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}">{{ item.title }}</a>
+                        </h2>
+                        <div class="fs12 text-black-50">
+                            <a class="text-black-50 username" href="https://www.guiaihai.com/user/10067.html" alt="{{ item.username }}" title="{{ item.username }}">{{ item.username }}</a> {{ item.addtime }}                   
+                        </div>
+                        <div class="text-black-50 gaiyao mt-2">
+                            {{ item.desc }}<a class="show-all" href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}" alt="{{ item.title }}" title="{{ item.title }}">[查看全文]</a>
+                        </div>
+                        <div class="text-muted mt-2">
+                            <div class="float-start">分类：
+                                <a class="cate" href="{% url 'list' route_name=item.route_info.route_name  %}" alt="{{ item.route_info.title }}" title="{{ item.route_info.title }}">{{ item.route_info.title }}</a>
+                            </div>
+                            <div class="float-end">
+                                <i class="fa fa-eye"></i>5<i class="fa fa-comment ms-2"></i>0                        
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </li> 
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                {{ page|safe}}
+            </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card ts-nav-list">
+          <div class="card-header pic-color pic-color-rec">
+            热门导航
+          </div>
+          <div class="card-body">
+            <div class="row">
+                {% for key,category in hotCategorys.items %}
+                <div class="col-md-4 col-4">
+                    <a href="{% url 'list' route_name=category.route_name %}">{{ category.title }}</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        </div>
+        <div class="card">
+            <div class="card-header  pic-color pic-color-hot">
+            热门{{ tag_name}}             
+            </div>
+            <div class="card-body">
+                <ul class="wenzhang-list">
+                    {% for item in hotArticles %}
+                    <li>
+                        <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}">{{item.title}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header pic-color pic-color-new">
+            最新{{ tag_name}}        
+            </div>
+            <div class="card-body">
+                <ul class="wenzhang-list">
+                    {% for item in newArticles %}
+                    <li>
+                        <a href="{% url 'detail' route_name=item.route_info.route_name third_id=item.article_id %}">{{item.title}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% include "common/footer.html" %}
+{% include "common/footer-js.html" %}
